@@ -33,7 +33,7 @@
 ## Design Philosophy
 
 **Visual Identity:**
-- Deep Forest Green (#16a34a) - Primary color representing growth and sustainability
+- Deep Forest Green (#417658) - Primary color representing growth and sustainability
 - Warm Earthy Brown/Terracotta (#8b6f47) - Secondary color for groundedness
 - Soft Gold/Ochre (#d4af37) - Accent color for warmth and wisdom
 - Sky Blue (#87ceeb) - Secondary accent for openness
@@ -265,14 +265,10 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ## Deployment
 
 ### Recommended Platforms
-1. **Vercel** (Primary recommendation)
+1. **Vercel** 
    - Seamless Next.js integration
    - Automatic deployments
    - Environment variable management
-
-2. **Firebase Hosting** (Alternative)
-   - Integrated with Firebase services
-   - CDN and SSL included
 
 ### Build Configuration
 ```bash
@@ -314,8 +310,8 @@ npm run start
 ## Contact Information
 
 **Address:** 5847 Sage River Court SW, Wyoming, MI 49418  
-**Website:** [To be determined]  
-**Project Repository:** [GitHub repository URL]
+**Website:** collaborative-developments.com  
+**Project Repository:** https://github.com/motlaghi1/collaborative-developments.git
 
 ## Notes for AI Assistants
 

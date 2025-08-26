@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Custom fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
+
+/* Tailwind CSS v4 Theme Configuration */
+@theme {
+  /* Custom Colors */
+  --color-primary-50: #f0f9f4;
+  --color-primary-100: #dcf4e6;
+  --color-primary-200: #bce8d1;
+  --color-primary-300: #86d5b0;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #417658;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
+  --color-primary-950: #0f2e1a;
+
+  --color-earthy-50: #fdf8f6;
+  --color-earthy-100: #f2e8e5;
+  --color-earthy-200: #eaddd7;
+  --color-earthy-300: #e0cec7;
+  --color-earthy-400: #d2bab0;
+  --color-earthy-500: #bfa094;
+  --color-earthy-600: #a18072;
+  --color-earthy-700: #8b6f47;
+  --color-earthy-800: #73593a;
+  --color-earthy-900: #5c4a31;
+  --color-earthy-950: #3f2e22;
+
+  --color-accent-gold: #d4af37;
+  --color-accent-sky: #87ceeb;
+  --color-neutral-cream: #FFF9EB;
+  --color-neutral-charcoal: #374151;
+
+  /* Font Families */
+  --font-sans: 'Inter', ui-sans-serif, system-ui;
+  --font-serif: 'Merriweather', ui-serif, Georgia;
+
+  /* Custom Animations */
+  --animate-fade-in: fade-in 0.6s ease-in-out;
+  --animate-slide-up: slide-up 0.6s ease-out;
+  --animate-bounce-gentle: bounce-gentle 2s infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Keyframes for animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes slide-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
   }
 }
 
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(0); }
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif);
+  color: var(--color-neutral-charcoal);
+  background-color: var(--color-neutral-cream);
+  line-height: 1.6;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 1rem 0;
+}
+
+/* Reset default margins */
+* {
+  box-sizing: border-box;
+}
+
+p, ul, ol, blockquote {
+  margin: 0 0 1rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  }
+  
+  .bg-gradient-earthy {
+    background: linear-gradient(135deg, var(--color-earthy-600) 0%, var(--color-earthy-700) 100%);
+  }
+}
+
+/* Component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-earthy-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-earthy-600 transition-colors duration-200;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary-600 text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 hover:text-white transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300;
+  }
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Reset scrollbar to default and prevent layout shift */
+html {
+  scrollbar-gutter: stable;
 }
