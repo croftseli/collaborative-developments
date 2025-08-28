@@ -22,7 +22,7 @@ const NewsManager = () => {
 
   const loadNews = async () => {
     const newsData = await getNews(false); // Get all news including unpublished
-    setNews(newsData);
+    setNews(newsData as NewsItem[]);
   };
 
   const onSubmit = async (data: NewsItem) => {

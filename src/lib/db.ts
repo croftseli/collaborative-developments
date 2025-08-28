@@ -21,12 +21,17 @@ export const addNews = async (newsData: any) => {
   });
 };
 
-export const getNews = async (published = true) => {
-  const q = query(
-    collection(db, 'news'),
-    where('published', '==', published),
-    orderBy('date', 'desc')
-  );
+export const getNews = async (published: boolean = true) => {
+  let q;
+  if (published) {
+    q = query(
+      collection(db, 'news'),
+      where('published', '==', published),
+      orderBy('date', 'desc')
+    );
+  } else {
+    q = query(collection(db, 'news'), orderBy('date', 'desc'));
+  }
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({
     id: doc.id,
