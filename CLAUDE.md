@@ -310,7 +310,7 @@ npm run start
 ## Contact Information
 
 **Address:** 5847 Sage River Court SW, Wyoming, MI 49418  
-**Website:** collaborative-developments.com  
+**Website:** https://collaborative-developments-bftj.vercel.app  
 **Project Repository:** https://github.com/motlaghi1/collaborative-developments.git
 
 ## Notes for AI Assistants
