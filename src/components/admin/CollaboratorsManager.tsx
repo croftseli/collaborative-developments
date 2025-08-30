@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { addCollaborator, getCollaborators, updateDocument, deleteDocument } from '../../lib/db';
 import { useForm } from 'react-hook-form';
 
@@ -10,6 +11,7 @@ interface Collaborator {
   logoUrl?: string;
   websiteUrl?: string;
   featured: boolean;
+  [key: string]: unknown;
 }
 
 const CollaboratorsManager = () => {
@@ -144,9 +146,11 @@ const CollaboratorsManager = () => {
             <div key={item.id} className="p-6 flex justify-between items-start">
               <div className="flex items-start space-x-4 flex-1">
                 {item.logoUrl && (
-                  <img
+                  <Image
                     src={item.logoUrl}
                     alt={`${item.name} logo`}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 object-contain"
                   />
                 )}

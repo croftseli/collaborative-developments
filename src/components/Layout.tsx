@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '../contexts/AuthContext';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -151,9 +152,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <footer className="bg-primary-600 text-white py-8 sm:py-12 mt-auto relative">
         {/* Community Silhouette Image - Hidden on mobile for better performance */}
         <div className="hidden md:block absolute top-0 right-0 pr-4">
-          <img 
+          <Image 
             src="/people.png" 
             alt="Community of people holding hands" 
+            width={224}
+            height={224}
             className="opacity-80 h-32 lg:h-48 xl:h-56 w-auto"
             style={{ filter: 'brightness(0) saturate(100%) invert(37%) sepia(18%) saturate(1352%) hue-rotate(95deg) brightness(91%) contrast(89%)' }}
           />
@@ -164,9 +167,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             {/* Company Logo */}
             <div className="sm:col-span-2 lg:col-span-1 flex justify-center sm:justify-start">
               <div className="w-36 h-36 rounded-full overflow-hidden bg-white">
-                <img 
+                <Image 
                   src="/logo.jpg" 
                   alt="Collaborative Developments LLC Logo" 
+                  width={144}
+                  height={144}
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -13,7 +13,7 @@ import {
 import { db } from './firebase';
 
 // News Operations
-export const addNews = async (newsData: any) => {
+export const addNews = async (newsData: Record<string, unknown>) => {
   return await addDoc(collection(db, 'news'), {
     ...newsData,
     date: Timestamp.now(),
@@ -40,7 +40,7 @@ export const getNews = async (published: boolean = true) => {
 };
 
 // Resources Operations
-export const addResource = async (resourceData: any) => {
+export const addResource = async (resourceData: Record<string, unknown>) => {
   return await addDoc(collection(db, 'resources'), {
     ...resourceData,
     date: Timestamp.now()
@@ -57,7 +57,7 @@ export const getResources = async () => {
 };
 
 // Collaborators Operations
-export const addCollaborator = async (collaboratorData: any) => {
+export const addCollaborator = async (collaboratorData: Record<string, unknown>) => {
   return await addDoc(collection(db, 'collaborators'), collaboratorData);
 };
 
@@ -70,7 +70,7 @@ export const getCollaborators = async () => {
 };
 
 // Generic update and delete functions
-export const updateDocument = async (collectionName: string, id: string, data: any) => {
+export const updateDocument = async (collectionName: string, id: string, data: Record<string, unknown>) => {
   const docRef = doc(db, collectionName, id);
   await updateDoc(docRef, data);
 };

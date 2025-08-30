@@ -9,6 +9,7 @@ interface NewsItem {
   content: string;
   published: boolean;
   featuredImage?: string;
+  [key: string]: unknown;
 }
 
 const NewsManager = () => {

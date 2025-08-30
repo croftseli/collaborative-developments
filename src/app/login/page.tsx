@@ -15,7 +15,7 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
       router.push('/admin');
-    } catch (error) {
+    } catch {
       setError('Invalid credentials');
     }
   };

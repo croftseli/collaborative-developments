@@ -10,6 +10,7 @@ interface Resource {
   category: string;
   fileUrl?: string;
   externalUrl?: string;
+  [key: string]: unknown;
 }
 
 const ResourcesManager = () => {
