@@ -27,7 +27,7 @@ export default function ContactPage() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -41,10 +41,12 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
-            <p className="text-lg max-w-3xl mx-auto">
-              We welcome opportunities to collaborate and serve our community. 
-              Reach out to learn more about our initiatives or to explore partnership possibilities.
-            </p>
+            <div className="max-w-3xl mx-auto">
+              <p className="text-lg max-w-3xl mx-auto ">
+                We welcome opportunities to collaborate and serve our community. 
+                Reach out to learn more about our initiatives or to explore partnership possibilities.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -86,7 +88,7 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-lg mb-4" style={{ color: '#785038' }}>Our Approach</h3>
                   <p className="text-gray-700 leading-relaxed">
                     We believe in the power of collaborative action guided by spiritual principles. 
-                    Whether you're interested in agricultural initiatives, community development, or 
+                    Whether you&apos;re interested in agricultural initiatives, community development, or 
                     sustainable growth projects, we invite you to join us in building stronger, 
                     more unified communities.
                   </p>
@@ -131,7 +133,7 @@ export default function ContactPage() {
               {submitStatus === 'success' && (
                 <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
                   <p className="text-green-800">
-                    Thank you for your message! We'll get back to you soon.
+                    Thank you for your message! We&apos;ll get back to you soon.
                   </p>
                 </div>
               )}
@@ -238,11 +240,13 @@ export default function ContactPage() {
             <h2 className="text-3xl font-bold mb-8" style={{ color: '#785038' }}>
               Connect with Our Community
             </h2>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
-              Join us in building sustainable communities through collaborative action. 
-              Whether you're an investor, community leader, or someone passionate about 
-              positive change, we'd love to hear from you.
-            </p>
+            <div className="max-w-3xl mx-auto">
+              <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+                Join us in building sustainable communities through collaborative action. 
+                Whether you&apos;re an investor, community leader, or someone passionate about 
+                positive change, we&apos;d love to hear from you.
+              </p>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Investors */}
