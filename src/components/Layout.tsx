@@ -148,19 +148,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <main className="flex-1">{children}</main>
 
-      {/* Footer */}
-      <footer className="bg-primary-600 text-white py-8 sm:py-12 mt-auto relative">
-        {/* Community Silhouette Image - Hidden on mobile for better performance */}
-        <div className="hidden md:block absolute top-0 right-0 pr-4">
+      {/* People Image sitting on footer */}
+      <div className="relative">
+        <div className="hidden md:block absolute bottom-0 right-0 z-20">
           <Image 
             src="/people.png" 
             alt="Community of people holding hands" 
             width={224}
             height={224}
-            className="opacity-80 h-32 lg:h-48 xl:h-56 w-auto"
+            className="opacity-80 h-48 lg:h-56 xl:h-64 w-auto"
             style={{ filter: 'brightness(0) saturate(100%) invert(37%) sepia(18%) saturate(1352%) hue-rotate(95deg) brightness(91%) contrast(89%)' }}
           />
         </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-primary-600 text-white py-8 sm:py-12 mt-auto relative">
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -179,8 +182,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             
             {/* Quick Links */}
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-3 text-sm">
+              <h4 className="font-semibold mb-4 font-inter">Quick Links</h4>
+              <ul className="space-y-3 text-sm font-inter">
                 {navigation.map((item) => (
                   <li key={item.name}>
                     <Link 
@@ -197,8 +200,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             
             {/* Contact Info */}
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <address className="text-sm opacity-90 not-italic leading-relaxed">
+              <h4 className="font-semibold mb-4 font-inter">Contact</h4>
+              <address className="text-sm opacity-90 not-italic leading-relaxed font-inter">
                 <div className="mb-3">
                   <div className="font-medium mb-1">Address:</div>
                   <div>5847 Sage River Court SW</div>
@@ -209,15 +212,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             
             {/* Mission */}
             <div>
-              <h4 className="font-semibold mb-4">Our Mission</h4>
-              <p className="text-sm opacity-90 leading-relaxed">
+              <h4 className="font-semibold mb-4 font-inter">Our Mission</h4>
+              <p className="text-sm opacity-90 leading-relaxed font-inter">
                 Applying society-building principles to community development, food security, and job creation.
               </p>
             </div>
           </div>
           
           {/* Copyright Section */}
-          <div className="border-t border-primary-500 mt-8 pt-6 text-center">
+          <div className="border-t border-green-shadow mt-8 pt-6 text-center">
             <p className="text-sm opacity-75">
               © {new Date().getFullYear()} Collaborative Developments LLC. All rights reserved.
             </p>

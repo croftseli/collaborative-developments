@@ -21,14 +21,14 @@ export default function AboutPage() {
       <section className="bg-primary-600 text-white py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-8 color-neutral-cream">About Us</h1>
+            <h1 className="text-4xl font-jost font-bold mb-8 text-neutral-cream">About Us</h1>
             <div className="max-w-3xl mx-auto">
-              <p className="text-lg mb-6 color-neutral-cream">
+              <p className="text-lg font-jost text-left mb-6 text-neutral-cream">
                 Provide detailed information about Collaborative Developments LLC, including its purpose to
                 apply society-building principles to community development, food security, and job creation.
                 That which while leads us, but within the paths guidance has made them, Make sure which made. Also like those within also made them, also made them.
               </p>
-              <p className="color-neutral-cream">
+              <p className="text-left font-jost text-lg text-neutral-cream">
                 Our mission is rooted in foundational spiritual principles that guide our approach to sustainable
                 community development and collaborative growth.
               </p>
@@ -40,7 +40,7 @@ export default function AboutPage() {
       {/* Key Members Section */}
       <section className="py-16 bg-neutral-cream">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center mb-16" style={{ color: '#785038' }}>Key Members</h2>
+          <h2 className="text-4xl font-jost font-bold text-center mb-16" style={{ color: '#785038' }}>Key Members</h2>
           
           <div className="space-y-20 lg:space-y-24">
             {keyMembers.map((member, index) => (
@@ -76,13 +76,13 @@ export default function AboutPage() {
 
                 {/* Member Information */}
                 <div className="flex-1 text-center lg:text-left">
-                  <h3 className="text-2xl lg:text-3xl font-bold mb-2" style={{ color: '#785038' }}>
+                  <h3 className="text-2xl lg:text-3xl font-jost font-bold mb-2" style={{ color: '#785038' }}>
                     {member.name}
                   </h3>
-                  <p className="text-lg lg:text-xl font-medium mb-4" style={{ color: '#785038', opacity: 0.8 }}>
+                  <p className="text-lg lg:text-xl font-jost font-medium mb-4" style={{ color: '#785038', opacity: 0.8 }}>
                     {member.role}
                   </p>
-                  <p className="text-base lg:text-lg leading-relaxed max-w-2xl" style={{ color: '#666666' }}>
+                  <p className="text-base lg:text-lg font-jost leading-relaxed max-w-2xl" style={{ color: '#666666' }}>
                     {member.description}
                   </p>
                 </div>
@@ -92,7 +92,7 @@ export default function AboutPage() {
 
           {/* Foundation Story Section */}
           <div className="mt-32 lg:mt-40 max-w-4xl mx-auto">
-            <p className="text-base leading-relaxed text-center" style={{ color: '#666666' }}>
+            <p className="text-base font-inter leading-relaxed text-center" style={{ color: '#666666' }}>
               This is a foundation story. Founded with a commitment to applying society-building principles to practical 
               community development initiatives, Collaborative Developments LLC emerged from a deep understanding that 
               sustainable progress requires both spiritual insight and practical action. Our approach integrates timeless 

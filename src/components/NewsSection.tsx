@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { title } from 'process';
 
 const NewsSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,6 +31,13 @@ const NewsSection = () => {
       image: "/image.png", // Using existing community images
       summary: "Empowering youth through skill development",
       link: "/news/youth-training"
+    },
+    {
+      id: 4,
+      title: "Community Resilience Building",
+      image: "/design4.png", // Using existing community images
+      summary: "Strengthening community ties for a sustainable future",
+      link: "/news/community-resilience"
     }
   ];
 
@@ -79,7 +87,7 @@ const NewsSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl lg:text-4xl font-bold mb-12"
+          className="text-3xl lg:text-4xl font-jost font-bold mb-12"
           style={{
             fontWeight: 700,
             lineHeight: '100%',
