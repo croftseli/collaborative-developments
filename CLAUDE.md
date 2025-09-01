@@ -114,6 +114,7 @@ collaborative-developments/
   published: boolean;
   date: Timestamp;
   featuredImage?: string;
+  featuredVideo?: string;
   author?: string;
 }
 ```

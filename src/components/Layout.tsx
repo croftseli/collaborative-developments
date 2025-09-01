@@ -183,14 +183,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             {/* Quick Links */}
             <div>
               <h4 className="font-semibold mb-4 font-inter">Quick Links</h4>
-              <ul className="space-y-3 text-sm font-inter">
+              <ul className="space-y-3 text-sm ">
                 {navigation.map((item) => (
                   <li key={item.name}>
                     <Link 
                       href={item.href} 
                       className="hover:text-accent-gold transition-colors duration-200 flex items-center"
                     >
-                      <span className="mr-2">→</span>
+                      <span className="font-inter mr-2">→</span>
                       {item.name}
                     </Link>
                   </li>
