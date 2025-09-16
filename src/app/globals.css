@@ -1,47 +1,53 @@
 @import "tailwindcss";
 
 /* Custom fonts import */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
 
 /* Tailwind CSS v4 Theme Configuration */
 @theme {
-  /* Custom Colors */
-  --color-primary-50: #f0f9f4;
-  --color-primary-100: #dcf4e6;
-  --color-primary-200: #bce8d1;
-  --color-primary-300: #86d5b0;
-  --color-primary-400: #4ade80;
-  --color-primary-500: #22c55e;
-  --color-primary-600: #417658;
-  --color-primary-700: #15803d;
-  --color-primary-800: #166534;
-  --color-primary-900: #14532d;
-  --color-primary-950: #0f2e1a;
+  /* Custom Colors - New Palette */
+  /* Primary Colors */
+  --color-primary-50: #f2f8f5;
+  --color-primary-100: #e6f1eb;
+  --color-primary-200: #cce3d7;
+  --color-primary-300: #99c7af;
+  --color-primary-400: #66ab87;
+  --color-primary-500: #4d9270;
+  --color-primary-600: #0F4C2C;
+  --color-primary-700: #0c3f24;
+  --color-primary-800: #0a321d;
+  --color-primary-900: #082516;
+  --color-primary-950: #041812;
 
-  --color-earthy-50: #fdf8f6;
-  --color-earthy-100: #f2e8e5;
-  --color-earthy-200: #eaddd7;
-  --color-earthy-300: #e0cec7;
-  --color-earthy-400: #d2bab0;
-  --color-earthy-500: #bfa094;
-  --color-earthy-600: #a18072;
-  --color-earthy-700: #8b6f47;
-  --color-earthy-800: #73593a;
-  --color-earthy-900: #5c4a31;
-  --color-earthy-950: #3f2e22;
+  /* Earthy Brown/Terracotta */
+  --color-earthy-50: #faf7f4;
+  --color-earthy-100: #f5efe9;
+  --color-earthy-200: #ebdfd3;
+  --color-earthy-300: #d7c3ad;
+  --color-earthy-400: #c3a787;
+  --color-earthy-500: #b5966e;
+  --color-earthy-600: #965C3B;
+  --color-earthy-700: #7d4d31;
+  --color-earthy-800: #643e27;
+  --color-earthy-900: #4b2f1d;
+  --color-earthy-950: #322013;
 
-  --color-accent-gold: #d4af37;
-  --color-accent-sky: #87ceeb;
-  --color-neutral-cream: #FFF9EB;
-  --color-neutral-charcoal: #374151;
-  --color-green-shadow: #106635;
+  /* Accent Colors */
+  --color-accent-gold: #C9AA5E;
+  --color-accent-sky: #84B0CE;
+  
+  /* Neutral Colors */
+  --color-neutral-cream: #F5F1E5;
+  --color-neutral-charcoal: #333333;
+  
+  /* Legacy support */
+  --color-green-shadow: #0F4C2C;
 
 
   /* Font Families */
-  --font-sans: 'Inter', ui-sans-serif, system-ui;
-  --font-serif: 'Merriweather', ui-serif, Georgia;
+  --font-sans: 'Jost', ui-sans-serif, system-ui;
+  --font-serif: 'Jost', ui-sans-serif, system-ui;
   --font-jost: 'Jost', ui-sans-serif, system-ui;
-  --font-inter: 'Inter', ui-sans-serif, system-ui;
   
 
   /* Custom Animations */
@@ -79,7 +85,7 @@ html {
 }
 
 body {
-  font-family: var(--font-serif);
+  font-family: var(--font-jost);
   color: var(--color-neutral-charcoal);
   background-color: var(--color-neutral-cream);
   line-height: 1.6;
@@ -90,20 +96,15 @@ body {
 
 /* Heading styles */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
+  font-family: var(--font-jost);
   font-weight: 600;
   line-height: 1.3;
   margin: 0 0 1rem 0;
 }
 
-/* Override heading styles when font-jost is explicitly used */
+/* Font utility classes */
 .font-jost {
   font-family: var(--font-jost) !important;
-}
-
-/* Override heading styles when font-inter is explicitly used */
-.font-inter {
-  font-family: var(--font-inter) !important;
 }
 
 /* Reset default margins */

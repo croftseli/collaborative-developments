@@ -5,7 +5,7 @@
 ## Project Overview
 
 **Project Name:** Collaborative Developments LLC Website  
-**Technology Stack:** Next.js 14, TypeScript, Tailwind CSS, Firebase (Firestore, Authentication, Storage)  
+**Technology Stack:** Next.js 15.5.1, TypeScript, Tailwind CSS, Supabase (Database, Authentication, Storage)  
 **Purpose:** Create a professional website for Collaborative Developments LLC that reflects Baha'i Faith society-building principles and supports community development initiatives.
 
 ## Business Context
@@ -33,16 +33,15 @@
 ## Design Philosophy
 
 **Visual Identity:**
-- Deep Forest Green (#417658) - Primary color representing growth and sustainability
-- Warm Earthy Brown/Terracotta (#8b6f47) - Secondary color for groundedness
-- Soft Gold/Ochre (#d4af37) - Accent color for warmth and wisdom
-- Sky Blue (#87ceeb) - Secondary accent for openness
-- Cream/Off-White (#fefcf9) - Background color
-- Charcoal Grey (#374151) - Text color
+- Deep Forest Green (#0F4C2C) - Primary color representing growth and sustainability
+- Warm Earthy Brown/Terracotta (#965C3B) - Secondary color for groundedness
+- Soft Gold/Ochre (#C9AA5E) - Accent color for warmth and wisdom
+- Sky Blue (#84B0CE) - Secondary accent for openness
+- Cream/Off-White (#F5F1E5) - Background color
+- Charcoal Grey (#333333) - Text color
 
 **Typography:**
-- Headers: Modern sans-serif (Inter)
-- Body text: Classic serif (Merriweather)
+- All text: Jost font (modern, clean sans-serif)
 
 **Imagery Style:**
 - Nature and agricultural landscapes
@@ -64,14 +63,13 @@ Next.js 14 (App Router)
 
 ### Backend Services
 ```
-Firebase
-├── Firestore (Database)
+Supabase
+├── Supabase (Database)
 ├── Authentication (Email/Password)
-├── Storage (File uploads)
-└── Hosting (Optional)
+└── Storage (File uploads)
 ```
 
-### Project Structure
+### Basic Project Structure 
 ```
 collaborative-developments/
 ├── app/
@@ -96,14 +94,15 @@ collaborative-developments/
 ├── contexts/
 │   └── AuthContext.tsx
 ├── lib/
-│   ├── firebase.ts
-│   └── db.ts
+│   ├── supabase.ts
+│   ├── db.ts
+│   └── storage.ts
 └── public/
 ```
 
 ## Database Schema
 
-### Firestore Collections
+### Supabase Tables
 
 **news**
 ```typescript
@@ -114,8 +113,8 @@ collaborative-developments/
   published: boolean;
   date: Timestamp;
   featuredImage?: string;
-  featuredVideo?: string;
-  author?: string;
+  author: string;
+  createdBy: string;
 }
 ```
 
@@ -149,7 +148,7 @@ collaborative-developments/
 ### Public Features
 1. **Home Page**
    - Hero section with mission statement
-   - News updates slideshow
+   - News updates slideshow (with featured image) get from database
    - Call-to-action buttons
 
 2. **About Us Page**
@@ -162,17 +161,16 @@ collaborative-developments/
    - Featured articles
 
 4. **Resources Page**
-   - Categorized resources
-   - Search and filter functionality
-   - Document downloads and external links
+   - A list of links and downloadable resources like documents, pdfs, and videos
+   - controllable by the admin
 
 5. **Collaborators Page**
    - Partner organization profiles
    - Logos and website links
+   - controllable by the admin
 
 6. **Contact Page**
-   - Contact information
-   - Address: 5847 Sage River Court SW, Wyoming, MI 49418
+   - Contact information with email: rqualls@corinne-true-endeavors.com and phone number: +1 (123) 456-7890
    - Contact form
 
 ### Administrative Features
@@ -190,20 +188,26 @@ collaborative-developments/
    - Image uploads for news and resources
    - Document storage and management
 
+4. **News Updates workflow**
+   - Admin dashboard adds Title, Content, Published, Author, and featured image(optional)
+   - Featured image is uploaded to Supabase Storage
+   - Featured image url is added to News database and uploaded to database
+   - News Item list allows admin to edit and delete items
+   - Admin can publish or unpublish items
+
+5.
+   - 
+
 ## Environment Variables
 
 ```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ## Security Considerations
 
-### Firebase Security Rules
+### Supabase Security Rules
 - Public read access for published content only
 - Write access restricted to authenticated users
 - File upload permissions for authenticated users only
@@ -211,7 +215,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ### Authentication
 - Admin-only access to CMS features
 - Secure password requirements
-- Session management through Firebase Auth
+- Session management through Supabase Auth
 
 ## Content Guidelines
 
@@ -241,7 +245,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 ### Setup Process
 1. Initialize Next.js project with TypeScript and Tailwind
-2. Configure Firebase project and services
+2. Configure Supabase project and services
 3. Set up authentication context
 4. Implement core components and layout
 5. Build database service layer
@@ -252,14 +256,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ### Key Dependencies
 ```json
 {
-  "next": "^14.0.0",
-  "react": "^18.0.0",
+  "next": "^15.5.1",
+  "react": "^19.1.0",
   "typescript": "^5.0.0",
-  "tailwindcss": "^3.3.0",
-  "firebase": "^10.0.0",
-  "framer-motion": "^10.0.0",
-  "react-hook-form": "^7.0.0",
-  "react-icons": "^4.0.0"
+  "tailwindcss": "^4.1.12",
+  "@supabase/supabase-js": "^2.57.4",
+  "framer-motion": "^12.23.12",
+  "react-hook-form": "^7.62.0",
+  "react-icons": "^5.5.0"
 }
 ```
 

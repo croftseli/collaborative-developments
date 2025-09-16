@@ -53,17 +53,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   </button>
                 </>
               )}
-              {!user && (
-                <Link
-                  href="/login"
-                  className="text-primary-600 px-4 py-2 rounded font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg transform bg-neutral-cream hover:bg-neutral-cream"
-                  style={{ 
-                    backgroundColor: '#FFF9EB'
-                  }}
-                >
-                  Login
-                </Link>
-              )}
             </div>
           </div>
 
@@ -108,38 +97,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 ))}
                 
                 {/* Mobile Auth Section */}
-                <div className="border-t border-primary-500 pt-4 mt-4">
-                  {user && (
-                    <>
-                      <Link
-                        href="/admin"
-                        className="text-white hover:text-accent-gold block px-3 py-2 rounded-md text-base font-medium transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Admin Dashboard
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsMenuOpen(false);
-                        }}
-                        className="text-white hover:text-accent-gold block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors"
-                      >
-                        Logout
-                      </button>
-                    </>
-                  )}
-                  {!user && (
+                {user && (
+                  <div className="border-t border-primary-500 pt-4 mt-4">
                     <Link
-                      href="/login"
-                      className="text-primary-600 block px-4 py-2 rounded font-medium transition-all duration-300 hover:scale-105 mx-3 bg-neutral-cream hover:bg-neutral-cream"
-                      style={{ backgroundColor: '#FFF9EB' }}
+                      href="/admin"
+                      className="text-white hover:text-accent-gold block px-3 py-2 rounded-md text-base font-medium transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Login
+                      Admin Dashboard
                     </Link>
-                  )}
-                </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="text-white hover:text-accent-gold block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
