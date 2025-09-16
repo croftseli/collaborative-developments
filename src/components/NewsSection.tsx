@@ -3,47 +3,51 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { title } from 'process';
+import { getNews } from '../lib/db';
+
+interface NewsItem {
+  id: string;
+  title: string;
+  content: string;
+  published: boolean;
+  author: string;
+  featured_image?: string;
+  date: string;
+  created_at?: string;
+}
 
 const NewsSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  
-  // Mock news data - in production, this would come from the database
-  const newsItems = [
-    {
-      id: 1,
-      title: "Community Engagement Workshop",
-      image: "/design1.png", // Using existing community images
-      summary: "Building stronger communities through collaborative dialogue",
-      link: "/news/community-workshop"
-    },
-    {
-      id: 2,
-      title: "Agricultural Development Initiative",
-      image: "/design2.png", // Using existing community images
-      summary: "Sustainable farming practices for food security",
-      link: "/news/agricultural-development"
-    },
-    {
-      id: 3,
-      title: "Youth Training Program Launch",
-      image: "/image.png", // Using existing community images
-      summary: "Empowering youth through skill development",
-      link: "/news/youth-training"
-    },
-    {
-      id: 4,
-      title: "Community Resilience Building",
-      image: "/design4.png", // Using existing community images
-      summary: "Strengthening community ties for a sustainable future",
-      link: "/news/community-resilience"
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load news from database
+  useEffect(() => {
+    loadNewsData();
+  }, []);
+
+  const loadNewsData = async () => {
+    try {
+      setLoading(true);
+      const publishedNews = await getNews(true); // Get only published news
+      console.log('Loaded published news:', publishedNews);
+      console.log('First news item:', publishedNews[0]);
+      if (publishedNews[0]) {
+        console.log('Featured image field:', publishedNews[0].featured_image);
+      }
+      setNewsItems(publishedNews as NewsItem[]);
+    } catch (error) {
+      console.error('Error loading news:', error);
+      setNewsItems([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   // Auto-advance functionality
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || newsItems.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % newsItems.length);
@@ -71,13 +75,53 @@ const NewsSection = () => {
   };
 
   const getVisibleCards = () => {
+    if (newsItems.length === 0) return [];
+    
     const cards = [];
-    for (let i = 0; i < 3; i++) {
+    const maxCards = Math.min(3, newsItems.length);
+    for (let i = 0; i < maxCards; i++) {
       const index = (currentSlide + i) % newsItems.length;
       cards.push(newsItems[index]);
     }
     return cards;
   };
+
+  // Create a summary from content (first 100 characters)
+  const createSummary = (content: string) => {
+    return content.length > 100 ? content.substring(0, 100) + '...' : content;
+  };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <section className="bg-neutral-cream py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl lg:text-4xl font-jost font-bold mb-12" style={{ color: '#785038' }}>
+            News Updates
+          </h2>
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Show message if no news available
+  if (!newsItems || newsItems.length === 0) {
+    return (
+      <section className="bg-neutral-cream py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl lg:text-4xl font-jost font-bold mb-12" style={{ color: '#785038' }}>
+            News Updates
+          </h2>
+          <div className="text-center">
+            <p className="text-gray-600 text-lg">No news updates available at this time.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="bg-neutral-cream py-16 lg:py-20">
@@ -101,34 +145,38 @@ const NewsSection = () => {
 
         {/* News Cards Container */}
         <div className="relative">
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-            style={{
-              backgroundColor: '#785038',
-              boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)'
-            }}
-            aria-label="Previous news items"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+          {/* Navigation Arrows - Only show if more than 3 items */}
+          {newsItems.length > 3 && (
+            <>
+              <button
+                onClick={prevSlide}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                style={{
+                  backgroundColor: '#785038',
+                  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)'
+                }}
+                aria-label="Previous news items"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
 
-          <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-            style={{
-              backgroundColor: '#785038',
-              boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)'
-            }}
-            aria-label="Next news items"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                style={{
+                  backgroundColor: '#785038',
+                  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)'
+                }}
+                aria-label="Next news items"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          )}
 
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -145,12 +193,24 @@ const NewsSection = () => {
                 >
                   {/* Card Image */}
                   <div className="relative h-64 lg:h-72 overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                    {item.featured_image ? (
+                      <Image
+                        src={item.featured_image}
+                        alt={item.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          console.error('Image failed to load:', item.featured_image);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                        <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6" />
+                        </svg>
+                      </div>
+                    )}
                     {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                     
@@ -160,7 +220,7 @@ const NewsSection = () => {
                         {item.title}
                       </h3>
                       <p className="text-white/90 text-sm line-clamp-2">
-                        {item.summary}
+                        {createSummary(item.content)}
                       </p>
                     </div>
                   </div>
@@ -171,8 +231,11 @@ const NewsSection = () => {
                       whileHover={{ x: 5 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
+                      <div className="text-sm text-gray-500 mb-2">
+                        By {item.author} • {new Date(item.date).toLocaleDateString()}
+                      </div>
                       <Link
-                        href={item.link}
+                        href={`/news/${item.id}`}
                         className="group/link inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200"
                       >
                         <span>Learn more</span>
@@ -192,21 +255,23 @@ const NewsSection = () => {
             </AnimatePresence>
           </div>
 
-          {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {newsItems.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentSlide 
-                    ? 'bg-primary-600 w-8' 
-                    : 'bg-primary-300 hover:bg-primary-400'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+          {/* Dots Indicator - Only show if more than 3 items */}
+          {newsItems.length > 3 && (
+            <div className="flex justify-center mt-8 space-x-2">
+              {newsItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-primary-600 w-8' 
+                      : 'bg-primary-300 hover:bg-primary-400'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { supabase, News, Resource, Collaborator } from './supabase';
+import { supabase } from './supabase';
 
 // News Operations
 export const addNews = async (newsData: Record<string, unknown>) => {
@@ -11,8 +11,8 @@ export const addNews = async (newsData: Record<string, unknown>) => {
       date: new Date().toISOString(),
       published: newsData.published || false,
       author: newsData.author || 'Unknown',
-      created_by: newsData.createdBy || 'admin',
-      featured_image: newsData.featuredImage as string || null
+      created_by: newsData.created_by || 'admin',
+      featured_image: newsData.featured_image as string || null
     };
     
     console.log('Document data to save:', docData);
@@ -133,12 +133,21 @@ export const getCollaborators = async () => {
 
 // Generic update and delete functions
 export const updateDocument = async (collectionName: string, id: string, updateData: Record<string, unknown>) => {
-  const { error } = await supabase
+  console.log(`Updating ${collectionName} with ID ${id}:`, updateData);
+  
+  const { data, error } = await supabase
     .from(collectionName)
     .update(updateData)
-    .eq('id', id);
+    .eq('id', id)
+    .select();
 
-  if (error) throw error;
+  if (error) {
+    console.error(`Update error for ${collectionName}:`, error);
+    throw error;
+  }
+  
+  console.log(`Update successful for ${collectionName}:`, data);
+  return data;
 };
 
 export const deleteDocument = async (collectionName: string, id: string) => {

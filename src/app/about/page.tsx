@@ -89,19 +89,6 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </div>
-
-          {/* Foundation Story Section */}
-          <div className="mt-32 lg:mt-40 max-w-4xl mx-auto">
-            <p className="text-base font-inter leading-relaxed text-center" style={{ color: '#666666' }}>
-              This is a foundation story. Founded with a commitment to applying society-building principles to practical 
-              community development initiatives, Collaborative Developments LLC emerged from a deep understanding that 
-              sustainable progress requires both spiritual insight and practical action. Our approach integrates timeless 
-              principles of unity, justice, and collaborative decision-making with modern methodologies for community 
-              engagement, resource development, and capacity building. Through partnerships with local organizations, 
-              government entities, and community leaders, we work to create lasting positive change that addresses 
-              fundamental needs while building the foundations for long-term prosperity and social cohesion.
-            </p>
-          </div>
         </div>
       </section>
     </div>

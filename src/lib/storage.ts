@@ -2,8 +2,16 @@ import { supabase } from './supabase';
 
 export const uploadFile = async (file: File, fileName: string): Promise<string> => {
   try {
-    // Store images in 'news' folder in Supabase Storage
+    console.log('🚀 Starting file upload:', fileName);
+    console.log('📁 File details:', { 
+      name: file.name, 
+      size: file.size, 
+      type: file.type 
+    });
+    
+    // Store images in 'news' folder in the existing 'images' bucket
     const filePath = `news/${fileName}`;
+    console.log('📤 Uploading to path:', filePath);
     
     const { data, error } = await supabase.storage
       .from('images')
@@ -12,18 +20,40 @@ export const uploadFile = async (file: File, fileName: string): Promise<string> 
         upsert: false
       });
     
-    if (error) throw error;
+    if (error) {
+      console.error('❌ Upload error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        name: error.name,
+        cause: error.cause
+      });
+      throw error;
+    }
+    
+    console.log('✅ Upload successful, data:', data);
     
     // Get the public URL
     const { data: { publicUrl } } = supabase.storage
       .from('images')
       .getPublicUrl(filePath);
     
+    console.log('🌐 File uploaded successfully, public URL:', publicUrl);
     return publicUrl;
   } catch (error) {
-    console.error('Error uploading file:', error);
+    console.error('💥 Error uploading file:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to upload file: ${errorMessage}`);
+  }
+};
+
+// Test if an image URL is accessible
+export const testImageUrl = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    console.error('Error testing image URL:', error);
+    return false;
   }
 };
 

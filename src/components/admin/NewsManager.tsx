@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { addNews, getNews, updateDocument, deleteDocument } from '../../lib/db';
 import { uploadFile, deleteFile } from '../../lib/storage';
 import { useForm } from 'react-hook-form';
+import Image from 'next/image';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NewsItem {
   id?: string;
@@ -10,7 +12,7 @@ interface NewsItem {
   content: string;
   published: boolean;
   author: string;
-  featuredImage?: string;
+  featured_image?: string;
   createdBy?: string;
   [key: string]: unknown;
 }
@@ -21,11 +23,19 @@ const NewsManager = () => {
   const [uploading, setUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { register, handleSubmit, reset, setValue, watch } = useForm<NewsItem>();
+  const { register, handleSubmit, reset, setValue } = useForm<NewsItem>();
+  const { user } = useAuth();
 
   useEffect(() => {
     loadNews();
   }, []);
+
+  // Debug: Log current user
+  useEffect(() => {
+    if (user) {
+      console.log('Current admin user:', user.id, user.email);
+    }
+  }, [user]);
 
   const loadNews = async () => {
     try {
@@ -45,7 +55,13 @@ const NewsManager = () => {
       setUploading(true);
       console.log('Starting news submission:', data);
       
-      let featuredImageUrl = data.featuredImage;
+      // Ensure user is logged in
+      if (!user?.id) {
+        alert('You must be logged in to create or edit news items.');
+        return;
+      }
+      
+      let featuredImageUrl = data.featured_image;
       
       // Handle image upload if a new file is selected
       if (fileInputRef.current?.files?.[0]) {
@@ -55,9 +71,9 @@ const NewsManager = () => {
         
         try {
           // Delete old image if updating and had a previous image
-          if (editingItem?.featuredImage) {
+          if (editingItem?.featured_image) {
             try {
-              await deleteFile(editingItem.featuredImage);
+              await deleteFile(editingItem.featured_image);
               console.log('Old image deleted successfully');
             } catch (error) {
               console.warn('Could not delete old image:', error);
@@ -68,25 +84,43 @@ const NewsManager = () => {
           console.log('Image uploaded successfully:', featuredImageUrl);
         } catch (uploadError) {
           console.error('Image upload failed:', uploadError);
-          alert('Image upload failed. Saving news without image. Please enable Firebase Storage first.');
+          alert('Image upload failed. Saving news without image. Please check your Supabase Storage configuration.');
           featuredImageUrl = undefined;
         }
       }
       
-      const newsData = {
+      // Prepare update data - don't include fields that shouldn't be changed on update
+      const newsData: Record<string, unknown> = {
         title: data.title,
         content: data.content,
         author: data.author,
-        published: data.published || false,
-        featuredImage: featuredImageUrl || undefined,
-        createdBy: 'admin'
+        published: data.published || false
       };
+
+      // Only include featured_image if it was provided or changed
+      if (featuredImageUrl !== undefined) {
+        newsData.featured_image = featuredImageUrl;
+      }
+
+      // For new items, add creation fields
+      if (!editingItem?.id) {
+        newsData.date = new Date().toISOString();
+        newsData.created_by = user?.id || 'unknown';
+        console.log('Creating news with user ID:', user?.id);
+      }
       
       console.log('Saving news data:', newsData);
       
       if (editingItem?.id) {
         console.log('Updating existing news item:', editingItem.id);
-        await updateDocument('news', editingItem.id, newsData);
+        console.log('Update data being sent:', newsData);
+        try {
+          await updateDocument('news', editingItem.id, newsData);
+          console.log('Update completed successfully');
+        } catch (updateError) {
+          console.error('Update failed with error:', updateError);
+          throw updateError;
+        }
       } else {
         console.log('Adding new news item');
         await addNews(newsData);
@@ -98,15 +132,26 @@ const NewsManager = () => {
       setEditingItem(null);
       setPreviewImage(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
+      setValue('featured_image', '');
       await loadNews();
     } catch (error) {
       console.error('Detailed error saving news:', {
         error,
         message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined
+        stack: error instanceof Error ? error.stack : undefined,
+        type: typeof error,
+        errorObject: error
       });
       
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      let errorMessage = 'Unknown error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object') {
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+      
       alert(`Error saving news item: ${errorMessage}`);
     } finally {
       setUploading(false);
@@ -119,8 +164,8 @@ const NewsManager = () => {
     setValue('content', item.content);
     setValue('published', item.published);
     setValue('author', item.author);
-    setValue('featuredImage', item.featuredImage || '');
-    setPreviewImage(item.featuredImage || null);
+    setValue('featured_image', item.featured_image || '');
+    setPreviewImage(item.featured_image || null);
   };
 
   const handleDelete = async (id: string) => {
@@ -128,9 +173,9 @@ const NewsManager = () => {
       try {
         // Find the item to get the image URL
         const item = news.find(n => n.id === id);
-        if (item?.featuredImage) {
+        if (item?.featured_image) {
           try {
-            await deleteFile(item.featuredImage);
+            await deleteFile(item.featured_image);
           } catch (error) {
             console.warn('Could not delete image:', error);
           }
@@ -218,19 +263,22 @@ const NewsManager = () => {
               className="w-full border rounded-lg px-3 py-2"
             />
             {previewImage && (
-              <div className="mt-2 relative">
-                <img
+              <div className="mt-2 relative inline-block">
+                <Image
                   src={previewImage}
                   alt="Preview"
-                  className="w-32 h-32 object-cover rounded-lg"
+                  width={160}
+                  height={160}
+                  className="w-40 h-40 object-cover rounded-lg border-2 border-gray-200"
                 />
                 <button
                   type="button"
                   onClick={() => {
                     setPreviewImage(null);
                     if (fileInputRef.current) fileInputRef.current.value = '';
+                    setValue('featured_image', '');
                   }}
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg"
                 >
                   ×
                 </button>
@@ -240,6 +288,12 @@ const NewsManager = () => {
               Optional. Supports JPG, PNG, GIF. Maximum size: 5MB
             </p>
           </div>
+          
+          {/* Hidden field for featured_image */}
+          <input 
+            {...register('featured_image')}
+            type="hidden"
+          />
           
           <div className="flex items-center">
             <input
@@ -266,6 +320,7 @@ const NewsManager = () => {
                   reset();
                   setPreviewImage(null);
                   if (fileInputRef.current) fileInputRef.current.value = '';
+                  setValue('featured_image', '');
                 }}
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
               >
@@ -285,16 +340,18 @@ const NewsManager = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 flex-shrink-0">
-                      {item.featuredImage ? (
-                        <img
-                          src={item.featuredImage}
+                    <div className="w-20 h-20 flex-shrink-0">
+                      {item.featured_image ? (
+                        <Image
+                          src={item.featured_image}
                           alt="Featured"
-                          className="w-16 h-16 object-cover rounded-lg"
+                          width={80}
+                          height={80}
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 shadow-sm"
                         />
                       ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-gray-200">
+                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                         </div>
