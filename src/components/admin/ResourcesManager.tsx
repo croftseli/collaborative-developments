@@ -1,6 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { addResource, getResources, updateDocument, deleteDocument } from '../../lib/db';
+import { uploadResourceFile, deleteResourceFile } from '../../lib/storage';
 import { useForm } from 'react-hook-form';
 
 interface Resource {
@@ -16,6 +17,8 @@ interface Resource {
 const ResourcesManager = () => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [editingItem, setEditingItem] = useState<Resource | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { register, handleSubmit, reset, setValue } = useForm<Resource>();
 
   useEffect(() => {
@@ -29,12 +32,47 @@ const ResourcesManager = () => {
 
   const onSubmit = async (data: Resource) => {
     try {
+      setUploading(true);
+      console.log('Starting resource submission:', data);
+
+      let fileUrl = data.fileUrl;
+
+      // Handle file upload if a new file is selected
+      if (fileInputRef.current?.files?.[0]) {
+        console.log('File detected, starting upload...');
+        const file = fileInputRef.current.files[0];
+        const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+        try {
+          // Delete old file if updating and had a previous file
+          if (editingItem?.id) {
+            const editingItemWithDbFields = editingItem as Resource & { file_url?: string };
+            const oldFileUrl = editingItemWithDbFields.file_url || editingItem.fileUrl;
+            if (oldFileUrl) {
+              try {
+                await deleteResourceFile(oldFileUrl);
+                console.log('Old resource file deleted successfully');
+              } catch (error) {
+                console.warn('Could not delete old resource file:', error);
+              }
+            }
+          }
+
+          fileUrl = await uploadResourceFile(file, fileName);
+          console.log('Resource file uploaded successfully:', fileUrl);
+        } catch (uploadError) {
+          console.error('File upload failed:', uploadError);
+          alert('File upload failed. Please check your file and try again.');
+          return;
+        }
+      }
+
       // Map the form data to match database field names
       const resourceData = {
         title: data.title,
         description: data.description,
         category: data.category,
-        fileUrl: data.fileUrl || null,
+        fileUrl: fileUrl || null,
         externalUrl: data.externalUrl || null
       };
 
@@ -44,19 +82,23 @@ const ResourcesManager = () => {
           title: data.title,
           description: data.description,
           category: data.category,
-          file_url: data.fileUrl || null,
+          file_url: fileUrl || null,
           external_url: data.externalUrl || null
         };
         await updateDocument('resources', editingItem.id, updateData);
       } else {
         await addResource(resourceData);
       }
+
       reset();
       setEditingItem(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       loadResources();
     } catch (error) {
       console.error('Error saving resource:', error);
       alert('Error saving resource. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -73,8 +115,27 @@ const ResourcesManager = () => {
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this resource?')) {
-      await deleteDocument('resources', id);
-      loadResources();
+      try {
+        // Find the resource to get the file URL
+        const resource = resources.find(r => r.id === id);
+        if (resource) {
+          const resourceWithDbFields = resource as Resource & { file_url?: string };
+          const fileUrl = resourceWithDbFields.file_url || resource.fileUrl;
+          if (fileUrl) {
+            try {
+              await deleteResourceFile(fileUrl);
+              console.log('Resource file deleted successfully');
+            } catch (error) {
+              console.warn('Could not delete resource file:', error);
+            }
+          }
+        }
+        await deleteDocument('resources', id);
+        loadResources();
+      } catch (error) {
+        console.error('Error deleting resource:', error);
+        alert('Error deleting resource. Please try again.');
+      }
     }
   };
 
@@ -115,13 +176,29 @@ const ResourcesManager = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">File URL (optional)</label>
+            <label className="block text-sm font-medium mb-2">
+              File Upload <span className="text-gray-400 font-normal">(Optional)</span>
+            </label>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.mp4,.mp3,.avi"
+              className="w-full border rounded-lg px-3 py-2 mb-2"
+            />
+            <p className="text-xs text-gray-500 mb-2">
+              Supported: PDF, DOC, XLS, PPT, TXT, ZIP, Images, Videos, Audio files. Max size: 50MB
+            </p>
+
+            <label className="block text-sm font-medium mb-2">Or File URL (optional)</label>
             <input
               {...register('fileUrl')}
               type="url"
               className="w-full border rounded-lg px-3 py-2"
-              placeholder="URL to uploaded file"
+              placeholder="URL to external file"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Use either file upload or external URL, not both
+            </p>
           </div>
           
           <div>
@@ -137,9 +214,10 @@ const ResourcesManager = () => {
           <div className="flex space-x-4">
             <button
               type="submit"
-              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
+              disabled={uploading}
+              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {editingItem ? 'Update' : 'Add'} Resource
+              {uploading ? 'Saving...' : (editingItem ? 'Update' : 'Add')} Resource
             </button>
             {editingItem && (
               <button
@@ -147,6 +225,7 @@ const ResourcesManager = () => {
                 onClick={() => {
                   setEditingItem(null);
                   reset();
+                  if (fileInputRef.current) fileInputRef.current.value = '';
                 }}
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
               >
@@ -182,9 +261,9 @@ const ResourcesManager = () => {
                             href={fileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-green-600 hover:text-green-800"
+                            className="text-xs text-green-600 hover:text-green-800 inline-flex items-center"
                           >
-                            📎 File
+                            {fileUrl.includes('supabase') ? '📁 Uploaded File' : '📎 File Link'}
                           </a>
                         )}
                         {externalUrl && (
@@ -192,7 +271,7 @@ const ResourcesManager = () => {
                             href={externalUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:text-blue-800"
+                            className="text-xs text-blue-600 hover:text-blue-800 inline-flex items-center"
                           >
                             🔗 External Link
                           </a>
