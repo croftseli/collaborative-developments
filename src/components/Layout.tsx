@@ -180,9 +180,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <h4 className="font-semibold mb-4 font-inter">Contact</h4>
               <address className="text-sm opacity-90 not-italic leading-relaxed font-inter">
                 <div className="mb-3">
-                  <div className="font-medium mb-1">Address:</div>
-                  <div>5847 Sage River Court SW</div>
-                  <div>Wyoming, MI 49418</div>
+                  <div className="font-medium mb-1">Email:</div>
+                  <a href="mailto:rqualls@corinne-true-endeavors.com" className="hover:text-accent-gold transition-colors">
+                    rqualls@corinne-true-endeavors.com
+                  </a>
+                </div>
+                <div className="mb-3">
+                  <div className="font-medium mb-1">Phone:</div>
+                  <a href="tel:+11234567890" className="hover:text-accent-gold transition-colors">
+                    +1 (123) 456-7890
+                  </a>
                 </div>
               </address>
             </div>
