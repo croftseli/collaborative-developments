@@ -29,16 +29,34 @@ const ResourcesManager = () => {
 
   const onSubmit = async (data: Resource) => {
     try {
+      // Map the form data to match database field names
+      const resourceData = {
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        fileUrl: data.fileUrl || null,
+        externalUrl: data.externalUrl || null
+      };
+
       if (editingItem?.id) {
-        await updateDocument('resources', editingItem.id, data);
+        // For updates, use the correct field names
+        const updateData = {
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          file_url: data.fileUrl || null,
+          external_url: data.externalUrl || null
+        };
+        await updateDocument('resources', editingItem.id, updateData);
       } else {
-        await addResource(data);
+        await addResource(resourceData);
       }
       reset();
       setEditingItem(null);
       loadResources();
     } catch (error) {
       console.error('Error saving resource:', error);
+      alert('Error saving resource. Please try again.');
     }
   };
 
@@ -47,8 +65,9 @@ const ResourcesManager = () => {
     setValue('title', item.title);
     setValue('description', item.description);
     setValue('category', item.category);
-    setValue('fileUrl', item.fileUrl || '');
-    setValue('externalUrl', item.externalUrl || '');
+    // Handle database field names (file_url, external_url)
+    setValue('fileUrl', (item as any).file_url || item.fileUrl || '');
+    setValue('externalUrl', (item as any).external_url || item.externalUrl || '');
   };
 
   const handleDelete = async (id: string) => {
@@ -150,9 +169,9 @@ const ResourcesManager = () => {
                   <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                     {item.category}
                   </span>
-                  {item.fileUrl && (
+                  {((item as any).file_url || item.fileUrl) && (
                     <a
-                      href={item.fileUrl}
+                      href={(item as any).file_url || item.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-green-600 hover:text-green-800"
@@ -160,9 +179,9 @@ const ResourcesManager = () => {
                       📎 File
                     </a>
                   )}
-                  {item.externalUrl && (
+                  {((item as any).external_url || item.externalUrl) && (
                     <a
-                      href={item.externalUrl}
+                      href={(item as any).external_url || item.externalUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-600 hover:text-blue-800"
