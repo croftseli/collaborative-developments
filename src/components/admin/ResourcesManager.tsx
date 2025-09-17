@@ -66,8 +66,9 @@ const ResourcesManager = () => {
     setValue('description', item.description);
     setValue('category', item.category);
     // Handle database field names (file_url, external_url)
-    setValue('fileUrl', (item as any).file_url || item.fileUrl || '');
-    setValue('externalUrl', (item as any).external_url || item.externalUrl || '');
+    const itemWithDbFields = item as Resource & { file_url?: string; external_url?: string };
+    setValue('fileUrl', itemWithDbFields.file_url || item.fileUrl || '');
+    setValue('externalUrl', itemWithDbFields.external_url || item.externalUrl || '');
   };
 
   const handleDelete = async (id: string) => {
@@ -169,26 +170,36 @@ const ResourcesManager = () => {
                   <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                     {item.category}
                   </span>
-                  {((item as any).file_url || item.fileUrl) && (
-                    <a
-                      href={(item as any).file_url || item.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-green-600 hover:text-green-800"
-                    >
-                      📎 File
-                    </a>
-                  )}
-                  {((item as any).external_url || item.externalUrl) && (
-                    <a
-                      href={(item as any).external_url || item.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800"
-                    >
-                      🔗 External Link
-                    </a>
-                  )}
+                  {(() => {
+                    const itemWithDbFields = item as Resource & { file_url?: string; external_url?: string };
+                    const fileUrl = itemWithDbFields.file_url || item.fileUrl;
+                    const externalUrl = itemWithDbFields.external_url || item.externalUrl;
+
+                    return (
+                      <>
+                        {fileUrl && (
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-green-600 hover:text-green-800"
+                          >
+                            📎 File
+                          </a>
+                        )}
+                        {externalUrl && (
+                          <a
+                            href={externalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:text-blue-800"
+                          >
+                            🔗 External Link
+                          </a>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
               <div className="ml-4 space-x-2">

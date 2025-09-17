@@ -271,7 +271,7 @@ export default function ResourcesPage() {
             </h2>
             <div className="max-w-2xl mx-auto mb-8">
               <p className="text-lg text-gray-700">
-                Can't find the resource you need? We're continuously adding new materials to support
+                Can&apos;t find the resource you need? We&apos;re continuously adding new materials to support
                 our community development initiatives. Reach out to us for assistance.
               </p>
             </div>
