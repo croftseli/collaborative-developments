@@ -75,8 +75,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2" style={{ color: '#785038' }}>Email</h3>
-                    <a href="mailto:rqualls@corinne-true-endeavors.com" className="text-gray-600 hover:text-primary-600 transition-colors">
-                      rqualls@corinne-true-endeavors.com
+                    <a href="info@collaborative-developments.com" className="text-gray-600 hover:text-primary-600 transition-colors">
+                      info@collaborative-developments.com
                     </a>
                   </div>
                 </div>
@@ -90,8 +90,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg mb-2" style={{ color: '#785038' }}>Phone</h3>
-                    <a href="tel:+11234567890" className="text-gray-600 hover:text-primary-600 transition-colors">
-                      +1 (123) 456-7890
+                    <a href="tel:+17344174550" className="text-gray-600 hover:text-primary-600 transition-colors">
+                      +1 (734) 417-4550
                     </a>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                      placeholder="your.email@example.com"
+                      placeholder="info@collaborative-developments.com"
                     />
                   </div>
                 </div>

@@ -181,14 +181,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <address className="text-sm opacity-90 not-italic leading-relaxed font-inter">
                 <div className="mb-3">
                   <div className="font-medium mb-1">Email:</div>
-                  <a href="mailto:rqualls@corinne-true-endeavors.com" className="hover:text-accent-gold transition-colors">
-                    rqualls@corinne-true-endeavors.com
+                  <a href="mailto:info@collaborative-developments.com" className="hover:text-accent-gold transition-colors">
+                    info@collaborative-developments.com
                   </a>
                 </div>
                 <div className="mb-3">
                   <div className="font-medium mb-1">Phone:</div>
-                  <a href="tel:+11234567890" className="hover:text-accent-gold transition-colors">
-                    +1 (123) 456-7890
+                  <a href="tel:+17344174550" className="hover:text-accent-gold transition-colors">
+                    +1 (734) 417-4550
                   </a>
                 </div>
               </address>
