@@ -111,6 +111,8 @@ const ResourcesManager = () => {
     const itemWithDbFields = item as Resource & { file_url?: string; external_url?: string };
     setValue('fileUrl', itemWithDbFields.file_url || item.fileUrl || '');
     setValue('externalUrl', itemWithDbFields.external_url || item.externalUrl || '');
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id: string) => {
@@ -160,7 +162,7 @@ const ResourcesManager = () => {
             <label className="block text-sm font-medium mb-2">Description</label>
             <textarea
               {...register('description', { required: true })}
-              rows={4}
+              rows={6}
               className="w-full border rounded-lg px-3 py-2"
               placeholder="Enter resource description"
             />

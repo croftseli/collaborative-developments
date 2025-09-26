@@ -166,6 +166,8 @@ const NewsManager = () => {
     setValue('author', item.author);
     setValue('featured_image', item.featured_image || '');
     setPreviewImage(item.featured_image || null);
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id: string) => {

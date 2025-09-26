@@ -92,6 +92,62 @@ export const uploadResourceFile = async (file: File, fileName: string): Promise<
   }
 };
 
+export const uploadCollaboratorLogo = async (file: File, fileName: string): Promise<string> => {
+  try {
+    console.log('🚀 Starting collaborator logo upload:', fileName);
+    console.log('📁 File details:', {
+      name: file.name,
+      size: file.size,
+      type: file.type
+    });
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Only image files are allowed');
+    }
+
+    // Validate file type is PNG or JPG
+    if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+      throw new Error('Only PNG and JPG files are allowed');
+    }
+
+    // Store logos in 'collaborators' folder in the existing 'images' bucket
+    const filePath = `collaborators/${fileName}`;
+    console.log('📤 Uploading to path:', filePath);
+
+    const { data, error } = await supabase.storage
+      .from('images')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('❌ Upload error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        name: error.name,
+        cause: error.cause
+      });
+      throw error;
+    }
+
+    console.log('✅ Upload successful, data:', data);
+
+    // Get the public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('images')
+      .getPublicUrl(filePath);
+
+    console.log('🌐 Collaborator logo uploaded successfully, public URL:', publicUrl);
+    return publicUrl;
+  } catch (error) {
+    console.error('💥 Error uploading collaborator logo:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to upload collaborator logo: ${errorMessage}`);
+  }
+};
+
 // Test if an image URL is accessible
 export const testImageUrl = async (url: string): Promise<boolean> => {
   try {
@@ -159,6 +215,39 @@ export const deleteResourceFile = async (fileUrl: string): Promise<void> => {
     }
   } catch (error) {
     console.error('Error deleting resource file:', error);
+    throw error instanceof Error ? error : new Error(String(error));
+  }
+};
+
+export const deleteCollaboratorLogo = async (fileUrl: string): Promise<void> => {
+  try {
+    // Check if it's a Supabase Storage URL
+    if (fileUrl.includes('supabase')) {
+      // Extract file path from Supabase URL
+      const url = new URL(fileUrl);
+      const pathParts = url.pathname.split('/');
+      const bucketIndex = pathParts.findIndex(part => part === 'images');
+
+      if (bucketIndex !== -1 && bucketIndex < pathParts.length - 1) {
+        const filePath = pathParts.slice(bucketIndex + 1).join('/');
+
+        // Only delete if it's in the collaborators folder
+        if (filePath.startsWith('collaborators/')) {
+          const { error } = await supabase.storage
+            .from('images')
+            .remove([filePath]);
+
+          if (error) throw error;
+          console.log('🗑️ Collaborator logo deleted successfully:', filePath);
+        } else {
+          throw new Error('File is not in the collaborators folder');
+        }
+      } else {
+        throw new Error('Could not extract file path from Supabase URL');
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting collaborator logo:', error);
     throw error instanceof Error ? error : new Error(String(error));
   }
 };

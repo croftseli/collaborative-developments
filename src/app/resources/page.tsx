@@ -190,14 +190,14 @@ export default function ResourcesPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
                   whileHover={{ y: -5 }}
                 >
                   {/* Category Header */}
                   <div className={`h-2 bg-gradient-to-r ${getCategoryColor(resource.category)}`} />
 
                   {/* Card Content */}
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-1">
                     {/* Category Badge */}
                     <div className="flex items-center justify-between mb-4">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border-2 ${getCategoryBorderColor(resource.category)} ${getCategoryTextColor(resource.category)} bg-white`}>
@@ -210,42 +210,63 @@ export default function ResourcesPage() {
                     </div>
 
                     {/* Title and Description */}
-                    <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-green-700 transition-colors">
-                      {resource.title}
-                    </h3>
+                    <Link href={`/resources/${resource.id}`}>
+                      <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-green-700 transition-colors cursor-pointer hover:underline">
+                        {resource.title}
+                      </h3>
+                    </Link>
 
-                    <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
-                      {resource.description}
-                    </p>
+                    <div className="flex-1">
+                      <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
+                        {resource.description}
+                      </p>
+                    </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      {resource.file_url && (
-                        <a
-                          href={resource.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                        >
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          Download
-                        </a>
-                      )}
+                    <div className="flex flex-col gap-2 mt-auto">
+                      {/* Primary View Details Button - Always full width */}
+                      <Link
+                        href={`/resources/${resource.id}`}
+                        className="w-full inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-medium rounded-lg hover:from-primary-700 hover:to-primary-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      >
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        View Details
+                      </Link>
 
-                      {resource.external_url && (
-                        <a
-                          href={resource.external_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                        >
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          View Online
-                        </a>
+                      {/* Secondary action buttons in a row */}
+                      {(resource.file_url || resource.external_url) && (
+                        <div className="flex gap-2">
+                          {resource.file_url && (
+                            <a
+                              href={resource.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+                            >
+                              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              Download
+                            </a>
+                          )}
+
+                          {resource.external_url && (
+                            <a
+                              href={resource.external_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+                            >
+                              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                              View Online
+                            </a>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
