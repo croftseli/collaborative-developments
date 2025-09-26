@@ -24,9 +24,13 @@ export default function AboutPage() {
             <h1 className="text-4xl font-jost font-bold mb-8 text-neutral-cream">About Us</h1>
             <div className="max-w-3xl mx-auto">
               <p className="text-lg font-jost text-left mb-6 text-neutral-cream">
-                Provide detailed information about Collaborative Developments LLC, including its purpose to
-                apply society-building principles to community development, food security, and job creation.
-                That which while leads us, but within the paths guidance has made them, Make sure which made. Also like those within also made them, also made them.
+                Collaborative Developments is a social enterprise that has emerged from years of efforts in
+                social and economic development projects in Grand Rapids, MI. The organization strives to
+                follow principles of development that encourage increased participation in communities to
+                address spiritual and material progress. We are currently pursuing lines of action that promote
+                opportunities in agriculture and in real estate development through community gardening,
+                farming and homesteading, and home construction. We welcome partnership with any individual
+                or organization who seeks to enhance the quality of life for all of the human family
               </p>
               <p className="text-left font-jost text-lg text-neutral-cream">
                 Our mission is rooted in foundational spiritual principles that guide our approach to sustainable
