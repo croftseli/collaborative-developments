@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
-/* Custom fonts import */
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+/* Fonts are now loaded via Next.js font optimization in layout.tsx */
 
 /* Tailwind CSS v4 Theme Configuration */
 @theme {

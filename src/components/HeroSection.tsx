@@ -15,7 +15,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8 }}
             className="text-center lg:text-left order-2 lg:order-1"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight font-jost font-bold text-neutral-cream">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-jost font-bold mb-4 sm:mb-6 leading-tight text-neutral-cream">
               Collaborative<br />
               Developments
             </h1>

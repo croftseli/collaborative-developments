@@ -1,6 +1,14 @@
 import './globals.css'
 import { AuthProvider } from '../contexts/AuthContext'
 import Layout from '../components/Layout'
+import { Jost } from 'next/font/google'
+
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-jost'
+})
 
 export const metadata = {
   title: 'Collaborative Developments LLC',
@@ -16,11 +24,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={jost.variable}>
       <head>
         <link rel="icon" href="/logo.jpg" type="image/jpeg" />
       </head>
-      <body>
+      <body className={jost.className}>
         <AuthProvider>
           <Layout>
             {children}
