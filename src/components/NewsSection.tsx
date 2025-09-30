@@ -51,7 +51,7 @@ const NewsSection = () => {
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % newsItems.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 15000); // Change slide every 15 seconds
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, newsItems.length]);
