@@ -178,29 +178,40 @@ const ResourcesManager = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">
-              File Upload <span className="text-gray-400 font-normal">(Optional)</span>
-            </label>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.mp4,.mp3,.avi"
-              className="w-full border rounded-lg px-3 py-2 mb-2"
-            />
-            <p className="text-xs text-gray-500 mb-2">
-              Supported: PDF, DOC, XLS, PPT, TXT, ZIP, Images, Videos, Audio files. Max size: 50MB
-            </p>
+            <label className="block text-sm font-medium mb-2">File Upload</label>
+            <div className="space-y-4">
+              {/* File input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.mp4,.mp3,.avi"
+                className="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-primary-600 file:text-white hover:file:bg-primary-700"
+              />
 
-            <label className="block text-sm font-medium mb-2">Or File URL (optional)</label>
-            <input
-              {...register('fileUrl')}
-              type="url"
-              className="w-full border rounded-lg px-3 py-2"
-              placeholder="URL to external file"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Use either file upload or external URL, not both
-            </p>
+              {/* File info */}
+              {fileInputRef.current?.files?.[0] && (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">
+                    📄 {fileInputRef.current.files[0].name} ({(fileInputRef.current.files[0].size / 1024 / 1024).toFixed(2)} MB)
+                  </span>
+                </div>
+              )}
+
+              {/* URL input as fallback */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Or enter file URL</label>
+                <input
+                  {...register('fileUrl')}
+                  type="url"
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                  placeholder="https://example.com/document.pdf"
+                />
+              </div>
+
+              <p className="text-xs text-gray-500">
+                Supported: PDF, DOC, XLS, PPT, TXT, ZIP, Images, Videos, Audio files. Max size: 50MB
+              </p>
+            </div>
           </div>
           
           <div>

@@ -254,49 +254,59 @@ const NewsManager = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Featured Image <span className="text-gray-400 font-normal">(Optional)</span>
-            </label>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-            {previewImage && (
-              <div className="mt-2 relative inline-block">
-                <Image
-                  src={previewImage}
-                  alt="Preview"
-                  width={160}
-                  height={160}
-                  className="w-40 h-40 object-cover rounded-lg border-2 border-gray-200"
+            <label className="block text-sm font-medium mb-2">Featured Image (PNG or JPG)</label>
+            <div className="space-y-4">
+              {/* File input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/png,image/jpg,image/jpeg"
+                onChange={handleImageChange}
+                className="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-primary-600 file:text-white hover:file:bg-primary-700"
+              />
+
+              {/* Preview */}
+              {previewImage && (
+                <div className="flex items-center space-x-4">
+                  <Image
+                    src={previewImage}
+                    alt="Image preview"
+                    width={64}
+                    height={64}
+                    className="w-16 h-16 object-cover rounded border"
+                  />
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">
+                      {fileInputRef.current?.files?.[0] ? 'New file selected' : 'Current image'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPreviewImage(null);
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                        setValue('featured_image', '');
+                      }}
+                      className="text-xs text-red-600 hover:text-red-800"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* URL input as fallback */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Or enter image URL</label>
+                <input
+                  {...register('featured_image')}
+                  type="url"
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                  placeholder="https://example.com/image.png"
                 />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPreviewImage(null);
-                    if (fileInputRef.current) fileInputRef.current.value = '';
-                    setValue('featured_image', '');
-                  }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg"
-                >
-                  ×
-                </button>
               </div>
-            )}
-            <p className="text-xs text-gray-500 mt-1">
-              Optional. Supports JPG, PNG, GIF. Maximum size: 5MB
-            </p>
+            </div>
           </div>
-          
-          {/* Hidden field for featured_image */}
-          <input 
-            {...register('featured_image')}
-            type="hidden"
-          />
-          
+
           <div className="flex items-center">
             <input
               {...register('published')}
